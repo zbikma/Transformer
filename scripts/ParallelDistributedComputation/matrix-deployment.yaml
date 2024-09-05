@@ -18,13 +18,19 @@ spec:
       - name: matrix-multiplier-container
         image: zmazadi/matrix-multiplier:latest  # Replace with your image
         imagePullPolicy: Always
+        volumeMounts:
+        - mountPath: "/data"
+          name: matrix-storage
         resources:
           limits:
             memory: "128Mi"
             cpu: "500m"
         ports:
         - containerPort: 8080  # Expose a port if needed (e.g., if you have a web server)
-        
+      volumes:
+      - name: matrix-storage
+        persistentVolumeClaim:
+          claimName: matrix-results-pvc
 ---
 apiVersion: v1
 kind: Service
