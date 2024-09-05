@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: matrix-multiplier-deployment
+  labels:
+    app: matrix-multiplier
+spec:
+  replicas: 1  # Number of pods to run
+  selector:
+    matchLabels:
+      app: matrix-multiplier
+  template:
+    metadata:
+      labels:
+        app: matrix-multiplier
+    spec:
+      containers:
+      - name: matrix-multiplier-container
+        image: zmazadi/matrix-multiplier:latest  # Replace with your image
+        imagePullPolicy: Always
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 8080  # Expose a port if needed (e.g., if you have a web server)
+        
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: matrix-multiplier-service
+spec:
+  selector:
+    app: matrix-multiplier
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8080  # Make sure this matches the container's exposed port (if you have one)
+  type: ClusterIP
